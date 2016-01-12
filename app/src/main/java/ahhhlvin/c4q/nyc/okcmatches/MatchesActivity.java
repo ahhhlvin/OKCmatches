@@ -3,16 +3,14 @@ package ahhhlvin.c4q.nyc.okcmatches;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.GridView;
 import android.widget.Toast;
 
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,12 +19,16 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 
 public class MatchesActivity extends AppCompatActivity {
 
-    public static final String url = "https://www.okcupid.com/matchSample.json";
+    private static final String URL = "https://www.okcupid.com/matchSample.json";
     ArrayList<OKCProfile> profileList;
-    GridView matchesGrid;
+    RecyclerView matchesGrid;
 
 
     @Override
@@ -37,7 +39,14 @@ public class MatchesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         profileList = new ArrayList<>();
-        matchesGrid = (GridView) findViewById(R.id.matchesGridView);
+
+
+
+        // FOR TESTING
+        for (int j = 0; j < 15; j++) {
+            profileList.add(new OKCProfile(null, "ahhhlvin", 22, "Sunnyside, NY", 100));
+        }
+
 
         new getProfiles().execute();
 
@@ -48,42 +57,41 @@ public class MatchesActivity extends AppCompatActivity {
 
     }
 
-
+    // Retrieves profile JSON on separate thread
     private class getProfiles extends AsyncTask<Void, Void, ArrayList<OKCProfile>> {
 
         OkHttpClient client = new OkHttpClient();
 
-        String run(String jsonUrl) throws IOException {
-            Request request = new Request.Builder().url(jsonUrl).build();
+
+        String run(String url) throws IOException {
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+
             Response response = client.newCall(request).execute();
             return response.body().string();
         }
 
-
         @Override
         protected ArrayList<OKCProfile> doInBackground(Void... arg0) {
 
+
             try {
-                JSONObject jsonObj = new JSONObject(run(url));
+                JSONObject jsonObj = new JSONObject(run(URL));
                 JSONArray profileArray = jsonObj.getJSONArray("data");
 
-                if (jsonObj == null) {
-                    Toast.makeText(getApplicationContext(), "jsonObj is null", Toast.LENGTH_SHORT).show();
-                } else {
+                for (int i = 0; i < profileArray.length(); i++) {
+                    JSONObject profileObj = profileArray.getJSONObject(i);
 
-                    for (int i = 0; i < profileArray.length(); i++) {
-                        JSONObject profileObj = profileArray.getJSONObject(i);
+                    OKCProfile profile = new OKCProfile();
+                    profile.setUsername(profileObj.get("username").toString());
+                    profile.setAge(Integer.valueOf(profileObj.get("age").toString()));
+                    profile.setLocation(profileObj.getJSONObject("location").get("city_name") + ", " + profileObj.getJSONObject("location").get("country_code"));
+                    profile.setImageURL(profileObj.getJSONObject("full_paths").get("original").toString());
+                    profile.setMatchPercentage(Integer.valueOf(profileObj.get("match").toString()));
 
-                        OKCProfile profile = new OKCProfile();
-                        profile.setUsername(profileObj.get("username").toString());
-                        profile.setAge(Integer.valueOf(profileObj.get("age").toString()));
-                        profile.setLocation(profileObj.getJSONObject("location").get("city_name") + ", " + profileObj.getJSONObject("location").get("country_code"));
-                        profile.setImageURL(profileObj.getJSONObject("photo").get("base_path").toString());
-                        profile.setMatchPercentage(Integer.valueOf(profileObj.get("match").toString()));
+                    profileList.add(profile);
 
-                        profileList.add(profile);
-
-                    }
                 }
 
 
@@ -101,7 +109,13 @@ public class MatchesActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<OKCProfile> list) {
             super.onPostExecute(list);
 
-            matchesGrid.setAdapter(new GridAdapter(MatchesActivity.this, list));
+            matchesGrid = (RecyclerView) findViewById(R.id.matchesGridView);
+            GridLayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
+            matchesGrid.setLayoutManager(mLayoutManager);
+            GridViewAdapter mAdapter = new GridViewAdapter(getApplicationContext(), profileList);
+            matchesGrid.setAdapter(mAdapter);
+
+
             Toast.makeText(getApplicationContext(), "There are " + String.valueOf(profileList.size()) + " profiles!", Toast.LENGTH_SHORT).show();
 
 
@@ -109,21 +123,17 @@ public class MatchesActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_matches, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
