@@ -29,6 +29,7 @@ public class MatchesActivity extends AppCompatActivity {
     private static final String URL = "https://www.okcupid.com/matchSample.json";
     ArrayList<OKCProfile> profileList;
     RecyclerView matchesGrid;
+    GridViewAdapter mAdapter;
 
 
     @Override
@@ -40,20 +41,21 @@ public class MatchesActivity extends AppCompatActivity {
 
         profileList = new ArrayList<>();
 
+        matchesGrid = (RecyclerView) findViewById(R.id.matchesGridView);
+
+
+        new getProfiles().execute();
+
+        mAdapter = new GridViewAdapter(getApplicationContext(), profileList);
+        matchesGrid.setAdapter(mAdapter);
+        GridLayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        matchesGrid.setLayoutManager(mLayoutManager);
 
 
         // FOR TESTING
 //        for (int j = 0; j < 15; j++) {
 //            profileList.add(new OKCProfile(null, "ahhhlvin", 22, "Sunnyside, NY", 100));
 //        }
-
-
-        new getProfiles().execute();
-
-        for (int i = 0; i < profileList.size(); i++) {
-            Log.i("ALVIN", profileList.get(i).getUsername());
-        }
-
 
     }
 
@@ -109,14 +111,9 @@ public class MatchesActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<OKCProfile> list) {
             super.onPostExecute(list);
 
-            matchesGrid = (RecyclerView) findViewById(R.id.matchesGridView);
-            GridLayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
-            matchesGrid.setLayoutManager(mLayoutManager);
-            GridViewAdapter mAdapter = new GridViewAdapter(getApplicationContext(), profileList);
-            matchesGrid.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
 
-
-            Toast.makeText(getApplicationContext(), "There are " + String.valueOf(profileList.size()) + " profiles!", Toast.LENGTH_SHORT).show();
+            //            Toast.makeText(getApplicationContext(), "There are " + String.valueOf(profileList.size()) + " profiles!", Toast.LENGTH_SHORT).show();
 
 
         }

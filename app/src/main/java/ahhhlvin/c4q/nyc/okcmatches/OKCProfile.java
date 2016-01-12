@@ -11,13 +11,14 @@ public class OKCProfile {
     private String location;
     private int matchPercentage;
 
-    public OKCProfile(String imageUrl, String username, int age, String location, int matchPercentage) {
-        this.imageURL = imageUrl;
-        this.username = username;
-        this.age = age;
-        this.location = location;
-        this.matchPercentage = matchPercentage;
-    }
+    // FOR TESTING
+//    public OKCProfile(String imageUrl, String username, int age, String location, int matchPercentage) {
+//        this.imageURL = imageUrl;
+//        this.username = username;
+//        this.age = age;
+//        this.location = location;
+//        this.matchPercentage = matchPercentage;
+//    }
 
     public OKCProfile (){};
 
