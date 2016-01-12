@@ -88,7 +88,7 @@ public class MatchesActivity extends AppCompatActivity {
                     profile.setAge(Integer.valueOf(profileObj.get("age").toString()));
                     profile.setLocation(profileObj.getJSONObject("location").get("city_name") + ", " + profileObj.getJSONObject("location").get("state_code"));
                     profile.setImageURL(profileObj.getJSONObject("photo").getJSONObject("full_paths").get("original").toString());
-                    profile.setMatchPercentage(Integer.valueOf(profileObj.get("match").toString()));
+                    profile.setMatchPercentage(Integer.valueOf(profileObj.get("match").toString())/100);
 
                     profileList.add(profile);
 
