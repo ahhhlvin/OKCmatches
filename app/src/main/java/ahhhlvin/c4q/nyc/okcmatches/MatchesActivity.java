@@ -9,8 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -112,9 +110,6 @@ public class MatchesActivity extends AppCompatActivity {
             super.onPostExecute(list);
 
             mAdapter.notifyDataSetChanged();
-
-            //            Toast.makeText(getApplicationContext(), "There are " + String.valueOf(profileList.size()) + " profiles!", Toast.LENGTH_SHORT).show();
-
 
         }
 
