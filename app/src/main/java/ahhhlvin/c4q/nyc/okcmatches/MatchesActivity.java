@@ -43,9 +43,9 @@ public class MatchesActivity extends AppCompatActivity {
 
 
         // FOR TESTING
-        for (int j = 0; j < 15; j++) {
-            profileList.add(new OKCProfile(null, "ahhhlvin", 22, "Sunnyside, NY", 100));
-        }
+//        for (int j = 0; j < 15; j++) {
+//            profileList.add(new OKCProfile(null, "ahhhlvin", 22, "Sunnyside, NY", 100));
+//        }
 
 
         new getProfiles().execute();
@@ -86,8 +86,8 @@ public class MatchesActivity extends AppCompatActivity {
                     OKCProfile profile = new OKCProfile();
                     profile.setUsername(profileObj.get("username").toString());
                     profile.setAge(Integer.valueOf(profileObj.get("age").toString()));
-                    profile.setLocation(profileObj.getJSONObject("location").get("city_name") + ", " + profileObj.getJSONObject("location").get("country_code"));
-                    profile.setImageURL(profileObj.getJSONObject("full_paths").get("original").toString());
+                    profile.setLocation(profileObj.getJSONObject("location").get("city_name") + ", " + profileObj.getJSONObject("location").get("state_code"));
+                    profile.setImageURL(profileObj.getJSONObject("photo").getJSONObject("full_paths").get("original").toString());
                     profile.setMatchPercentage(Integer.valueOf(profileObj.get("match").toString()));
 
                     profileList.add(profile);

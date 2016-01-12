@@ -56,10 +56,7 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.ViewHo
 
         final OKCProfile profileData = mProfiles.get(position);
 
-// TODO: fix !
-        Picasso.with(mContext).load("http://despick.com/wp-content/uploads/2015/07/art.png").into(holder.profileIV);
-//        Picasso.with(mContext).load(profileData.getImageURL()).into(holder.profileIV);
-
+        Picasso.with(mContext).load(profileData.getImageURL()).into(holder.profileIV);
         String ageLocation = profileData.getAge() + " • " + profileData.getLocation();
         String matchPercentage = profileData.getMatchPercentage() + "%" + "\n Match";
 
