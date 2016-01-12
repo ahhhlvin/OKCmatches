@@ -59,7 +59,6 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.ViewHo
         Picasso.with(mContext).load(profileData.getImageURL()).into(holder.profileIV);
         String ageLocation = profileData.getAge() + " • " + profileData.getLocation();
         String matchPercentage = profileData.getMatchPercentage() + "%" + "\n Match";
-
         holder.usernameTV.setText(profileData.getUsername());
         holder.ageLocationTV.setText(ageLocation);
         holder.matchPercentageTV.setText(matchPercentage);

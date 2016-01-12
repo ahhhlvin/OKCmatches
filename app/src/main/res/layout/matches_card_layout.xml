@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:adjustViewBounds="true"
-        android:contentDescription="profileImage"
         android:scaleType="centerCrop"
+        android:contentDescription="profileImage"
         android:src="@drawable/profilepic" />
 
 
